@@ -1,13 +1,17 @@
 import React, { useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { edite, isdone, supprimer } from "./redux/actions/taskAction";
 
 const Trtr = ({ index, el, setTask, task }) => {
   const [edit, setEdit] = useState(false);
   const [name, setName] = useState(el.name);
   const [desc, setDesc] = useState(el.desc);
-  const [supprimer, setSupprimer] = useState(true);
+  const [status, setStatus] = useState(el.status);
+  // const [supprimer, setSupprimer] = useState(true);
   const r = useRef();
   const k = useRef();
-  return supprimer ? (
+  const dispatch = useDispatch();
+  return (
     <tr key={index}>
       <td style={{ width: "5vw" }}>{index + 1}</td>
 
@@ -21,13 +25,14 @@ const Trtr = ({ index, el, setTask, task }) => {
               value={name}
               onChange={() => {
                 setName(r.current.value);
-                setTask(
-                  task.map((elt) =>
-                    elt.name === el.name
-                      ? { ...elt, name: r.current.value }
-                      : elt
-                  )
-                );
+                // setTask(
+                //   task.map((elt) =>
+                //     elt.name === el.name
+                //       ? { ...elt, name: r.current.value }
+                //       : elt
+                //   )
+                // );
+                dispatch(edite({ nameref: el.name, name: r.current.value }));
               }}
             />
           </td>
@@ -39,13 +44,14 @@ const Trtr = ({ index, el, setTask, task }) => {
               value={desc}
               onChange={() => {
                 setDesc(k.current.value);
-                setTask(
-                  task.map((elt) =>
-                    elt.desc === el.desc
-                      ? { ...elt, desc: k.current.value }
-                      : elt
-                  )
-                );
+                dispatch(edite({ nameref: el.name, desc: k.current.value }));
+                // setTask(
+                //   task.map((elt) =>
+                //     elt.desc === el.desc
+                //       ? { ...elt, desc: k.current.value }
+                //       : elt
+                //   )
+                // );
               }}
             />
           </td>
@@ -68,7 +74,7 @@ const Trtr = ({ index, el, setTask, task }) => {
           src="https://cdn-icons-png.flaticon.com/128/1214/1214428.png"
           style={{ width: "30px", cursor: "pointer" }}
           alt="delete"
-          onClick={() => setSupprimer(false)} // Hides the row
+          onClick={() => dispatch(supprimer(el.name))} // Hides the row
         />
         <img
           src="https://cdn-icons-png.flaticon.com/128/2198/2198355.png"
@@ -80,8 +86,16 @@ const Trtr = ({ index, el, setTask, task }) => {
           }}
         />
       </td>
+      <button
+        onClick={() => {
+          dispatch(isdone({ nameref: el.name }));
+        }}
+      >
+        done
+      </button>
+     
     </tr>
-  ) : null;
+  );
 };
 
 export default Trtr;

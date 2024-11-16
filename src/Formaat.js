@@ -3,6 +3,8 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Listtasks from "./Listtasks";
 import "./Format.css";
+import { useDispatch, useSelector } from "react-redux";
+import { add } from "./redux/actions/taskAction";
 const Formaat = () => {
   useEffect(() => {
     // get the value exsist in the local storage
@@ -16,7 +18,7 @@ const Formaat = () => {
   // Refs to access the input fields
   const r = useRef();
   const k = useRef();
-
+  const dispatch = useDispatch();
   return (
     <>
       <Form className="form-container">
@@ -45,24 +47,21 @@ const Formaat = () => {
           onClick={(event) => {
             event.preventDefault();
             if (r.current.value && k.current.value) {
-              const newTask = {
-                name: r.current.value,
-                desc: k.current.value,
-              };
-              setTask([...task, newTask]);
-              // Store the updated task list in local storage
-
-              localStorage.setItem(
-                "tasklist",
-                JSON.stringify([...task, newTask])
-              );
+              dispatch(add({ name: r.current.value, desc: k.current.value }));
             }
+
+            // Store the updated task list in local storage
+
+            // localStorage.setItem(
+            //   "tasklist",
+            //   JSON.stringify([...task, newTask])
+            // );
           }}
         >
           Submit form
         </Button>
       </Form>
-      <Listtasks user={task} setTask={setTask} />
+      <Listtasks />
     </>
   );
 };

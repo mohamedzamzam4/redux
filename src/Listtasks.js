@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import Table from "react-bootstrap/Table";
 import Trtr from "./Trtr";
+import { useSelector } from "react-redux";
 
-const Listtasks = (props) => {
+const Listtasks = () => {
+  const tasks = useSelector((state) => state.tasks);
+  const [listdone, setListdone] = useState(false);
   return (
     <>
       <h1>TASKS LIST</h1>
@@ -18,9 +21,11 @@ const Listtasks = (props) => {
         </thead>
         <tbody>
           {/* maping the state and display it */}
-          {props.user.map((el, index) => (
-            <Trtr el={el} index={index} setTask={props.setTask} task={props.user}/>
-          ))}
+          {tasks
+            .filter((el) => el.status == listdone)
+            .map((el, index) => (
+              <Trtr el={el} index={index} />
+            ))}
         </tbody>
       </Table>
     </>
