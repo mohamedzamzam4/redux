@@ -1,4 +1,3 @@
-import { type } from "@testing-library/user-event/dist/type";
 
 export const add = (data) => {
   return {
